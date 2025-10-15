@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
+ordenacao = "alfabetica"
 atendentes = []
 
 def adicionar_atendente():
@@ -16,17 +17,28 @@ def adicionar_atendente():
     
     atendentes.append({"nome":nome,"vendas":0})
     entrada_nome.delete(0,tk.END)
+    atualizar_interface()
 
 def resetar_atendentes():
     if messagebox.askyesno("Resetar","Deseja resetar os dados de atendentes?"):
         atendentes.clear()
+        atualizar_interface()
     
 def incrementar_vendas(indice):
     atendentes[indice]["vendas"] += 1
+    atualizar_interface()
 
+def decrementar_vendas(indice):
+    atendentes[indice]["vendas"] -= 1
+    atualizar_interface()
+def ordenar_por_vendas():
+    atendentes.sort(key=lambda x: x["vendas"],reverse=True)
 def atualizar_interface():
     for widget in quadro_atendentes.winfo_children():
         widget.destroy()
+
+    #Ordenação por número de vendas(decrescente)
+    ordenar_por_vendas()
 
     for i,atendente in enumerate(atendentes):
         texto = f"{atendente['nome']} - Vendas: {atendente['vendas']}"
@@ -39,6 +51,13 @@ def atualizar_interface():
             command=lambda indice=i: incrementar_vendas(indice)
         )
         botao_incrementar.grid(row=i,column=1)
+        botao_decrementar = tk.Button(
+            quadro_atendentes,
+            text="-1",
+            command=lambda indice=i: decrementar_vendas(indice)
+        )
+        botao_decrementar.grid(row=i,column=2
+        )
 
 
 #Interface Principal
