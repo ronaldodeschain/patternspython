@@ -1,38 +1,35 @@
 import tkinter as tk
 from tkinter import messagebox
-
-ordenacao = "alfabetica"
-atendentes = []
+import document
 
 def adicionar_atendente():
     nome = entrada_nome.get().strip()
-
-    if not nome:
+    resultado = document.adicionar_atendente(nome)
+    if resultado == "vazio":
         messagebox.showwarning("Nome vazio","Digite um nome svp.")
-        return 
     
-    if nome in [a["nome"] for a in atendentes]:
+    elif resultado == "duplicado":
         messagebox.showinfo("Duplicado","Atendente já existe.")
-        return
+    elif resultado == "ok":
+        entrada_nome.delete(0,tk.END)
+        atualizar_interface() 
     
-    atendentes.append({"nome":nome,"vendas":0})
-    entrada_nome.delete(0,tk.END)
-    atualizar_interface()
-
 def resetar_atendentes():
     if messagebox.askyesno("Resetar","Deseja resetar os dados de atendentes?"):
-        atendentes.clear()
+        document.resetar_atendentes()
         atualizar_interface()
     
 def incrementar_vendas(indice):
-    atendentes[indice]["vendas"] += 1
+    document.incrementar_vendas(indice)
     atualizar_interface()
 
 def decrementar_vendas(indice):
-    atendentes[indice]["vendas"] -= 1
+    document.decrementar_vendas(indice)
     atualizar_interface()
+
 def ordenar_por_vendas():
-    atendentes.sort(key=lambda x: x["vendas"],reverse=True)
+    document.get_atendentes().sort(key=lambda x: x["vendas"],reverse=True)
+
 def atualizar_interface():
     for widget in quadro_atendentes.winfo_children():
         widget.destroy()
@@ -40,7 +37,7 @@ def atualizar_interface():
     #Ordenação por número de vendas(decrescente)
     ordenar_por_vendas()
 
-    for i,atendente in enumerate(atendentes):
+    for i,atendente in enumerate(document.get_atendentes()):
         texto = f"{atendente['nome']} - Vendas: {atendente['vendas']}"
         rotulo = tk.Label(quadro_atendentes,text=texto)
         rotulo.grid(row=i,column=0,sticky="w")
@@ -62,7 +59,7 @@ def atualizar_interface():
 
 #Interface Principal
 janela = tk.Tk()
-janela.title("Controle de Vendas - Smart View")
+janela.title("Controle de Vendas - Document View")
 
 entrada_nome = tk.Entry(janela)
 entrada_nome.pack(pady=5,padx=15)
