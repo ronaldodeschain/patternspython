@@ -5,7 +5,7 @@ def adicionar_atendente(nome):
         return "vazio"
     
     if nome in [a["nome"] for a in atendentes]:
-        return " duplicado"
+        return "duplicado"
     
     atendentes.append({"nome":nome,"vendas":0})
     return "ok"

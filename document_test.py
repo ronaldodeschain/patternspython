@@ -1,10 +1,10 @@
-import document 
+import document
 
 def test_adicao_e_duplicacao():
     document.resetar_atendentes()
     assert document.adicionar_atendente("Pessoa") == "ok"
     assert document.adicionar_atendente("") == "vazio"
-    assert document.adicionar_atendente("Pessoa") == " duplicado"
+    assert document.adicionar_atendente("Pessoa") == "duplicado"
 
 def test_incremento():
     document.resetar_atendentes()
